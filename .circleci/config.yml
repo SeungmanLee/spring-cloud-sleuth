@@ -43,4 +43,4 @@ jobs:
 
       # 테스트 결과 보고서 생성
       - store_test_results:
-          path: test-results
+          path: build/test-results
