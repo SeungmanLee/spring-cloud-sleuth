@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.service.MainPageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
 
 /**
  * @author william.l
@@ -16,8 +19,15 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class HelloController {
 
+    private final MainPageService mainPageService;
+
+
     @Autowired
     private RestTemplate restTemplate;
+
+    public HelloController(MainPageService mainPageService) {
+        this.mainPageService = mainPageService;
+    }
 
     @RequestMapping("/hello")
     public String hello(@RequestParam String msg) {
@@ -37,11 +47,19 @@ public class HelloController {
 
         String uri = "http://localhost:" + port + "/hello?msg=" + "from " + portName + " :: " + msg;
         log.info("## uri={}", uri);
-        
+
         String response = restTemplate.getForObject(uri, String.class);
 
         log.info("## response={}", response);
         return response;
+    }
+
+    @RequestMapping("/my")
+    public HashMap<String, Object> my(@RequestParam String name) {
+        log.info("## HelloController::my={}", name);
+        HashMap<String, Object> result = mainPageService.mainPageInfo(name);
+        log.info("## HelloController::result={}", result);
+        return result;
     }
 
 
